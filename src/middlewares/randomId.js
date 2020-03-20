@@ -1,12 +1,10 @@
 export default  store => next => action=> {
     console.log("state before", store.getState());
     console.log("dispatching", action);
-
+    if(!action.generateId) return next(action);
     next ({
         ...action,
-        payload:{
-            ...action.payload,
-            id:new Date().getTime().toString(),
-        }});
+        randomId:(Date.now() + Math.random()).toString(),
+        });
     console.log("state after", store.getState());
 }
