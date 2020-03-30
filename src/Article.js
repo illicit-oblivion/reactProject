@@ -4,8 +4,13 @@ import PropTypes from 'prop-types';
 import {connect} from "react-redux";
 import {loadArticle} from "./AC";
 import Loader from "./Loader";
+import article from "./reducer/article";
+import {btnLanguage} from "./utils";
 
 class Article extends Component {
+    static contextTypes = {
+        language:PropTypes.string,
+    }
     static propTypes= {
         article:PropTypes.exact({
             id: PropTypes.string.isRequired,
@@ -17,25 +22,39 @@ class Article extends Component {
         isOpen: PropTypes.bool.isRequired,
         toggleOpen: PropTypes.func.isRequired,
     }
-    componentWillReceiveProps({isOpen,article,loadArticle}) {
+
+    componentDidMount() {
+        const { isOpen, id, loadArticle,article } = this.props;
         console.log(isOpen, article);
-        if(isOpen && !article.text && !article.loading) {
-            loadArticle(article.id);
+        if(!article  || (!article.text && !article.loading)) {
+            loadArticle(id);
             console.log(1)
         }
     }
 
+    // componentWillReceiveProps({isOpen,article,loadArticle}) {
+    //     console.log(isOpen, article);
+    //     if(article && isOpen && !article.text && !article.loading) {
+    //         loadArticle(article.id);
+    //         console.log(1)
+    //     }
+    // }
+
     render() {
         const { article, isOpen, toggleOpen } = this.props;
+        console.log(article);
+        if (!article) return null;
         if(article.loading) return  <Loader/>;
         return (
             <div>
                 <h1>{article.title}</h1>
-                <button onClick={toggleOpen}>{isOpen ? "close" : "open"}</button>
+                <button onClick={toggleOpen}>{isOpen ? btnLanguage(this.context.language,"close") : btnLanguage(this.context.language,"open")}</button>
                 {this.getBody()}
             </div>
         )
+
     }
+
 
     getBody() {
         const { isOpen } = this.props;
@@ -50,6 +69,8 @@ class Article extends Component {
 
     }
 }
-export default connect (null,{loadArticle})( Article)
+export default connect ((state,ownProps) => ({
+     article: state.articles.entities[ownProps.id],
+}),{loadArticle},null,{pure:false})( Article)
 
 

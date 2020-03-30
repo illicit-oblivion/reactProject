@@ -1,16 +1,19 @@
 //import {normalizedComments as defaultComments } from "../fixtures"
-import {ADD_COMMENT,LOAD_ARTICLE_COMMENTS,  SUCCESS} from "../constants";
+import {ADD_COMMENT, LOAD_ARTICLE_COMMENTS, LOAD_LIMIT_COMMENTS, START, SUCCESS} from "../constants";
 import { arrToMap} from "../helpers"
 
 const commentsMap = {
-    entities: {},
+    entities: {
+        loading:false,
+        loaded:false,
+    },
 }
 export default (commentState= commentsMap, action)=>{
     const {type,payload,randomId} = action;
     switch (type) {
         case ADD_COMMENT:
-            return {
-                ...commentState,
+                return {
+                    ...commentState,
                 entities:{
                     ...commentState.entities,
                     [randomId]: {
@@ -30,7 +33,25 @@ export default (commentState= commentsMap, action)=>{
                 ...arrToMap(payload.response),
                 }
             }
-
+        case LOAD_LIMIT_COMMENTS + START:
+            return {
+                ...commentState,
+                loading:true,
+                entities:{
+                    ...commentState.entities,
+                }
+            }
+        case LOAD_LIMIT_COMMENTS + SUCCESS:
+            const {response} = action;
+            return {
+                ...commentState,
+                total:response.total,
+                loading:false,
+                loaded:true,
+                entities:{
+                    ...arrToMap(response.records),
+                }
+            }
     }
     return commentState;
 }

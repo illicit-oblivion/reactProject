@@ -1,7 +1,7 @@
 import {
     CHANGE_SELECTION, SET_FROM_DATE, SET_TO_DATE,
     ADD_COMMENT, LOAD_ALL_ARTICLES, LOAD_ARTICLE, START, SUCCESS, FAIL,
-     LOAD_ARTICLE_COMMENTS
+     LOAD_ARTICLE_COMMENTS,LOAD_LIMIT_COMMENTS
 } from "../constants";
 
 export function selection(selectedOption) {
@@ -39,7 +39,12 @@ export function loadAllArticles() {
         callApi: "/api/article",
     }
 }
-
+export function loadLimitComments(limit,offset) {
+    return  {
+        type: LOAD_LIMIT_COMMENTS,
+        callApi: `/api/comment?limit=${limit}&offset=${offset}`,
+    }
+}
 export function loadArticle(id) {
     return (dispatch) =>{
         dispatch({
@@ -48,9 +53,18 @@ export function loadArticle(id) {
         })
         setTimeout(()=> {
             fetch(`/api/article/${id}`)
-                .then(res => res.json())
+                .then(res => {
+                    console.log(res.status);
+                    if(res.status>=404){
+                    throw new Error(res.statusText)}
+                    return res.json()
+                })
                 .then (response => dispatch({type:LOAD_ARTICLE + SUCCESS, payload: { id,response }}))
-                .catch (error => dispatch({type:LOAD_ARTICLE + FAIL,id, error}))
+                .catch (error => {
+                    console.log(error);
+                    dispatch({type:LOAD_ARTICLE + FAIL,id, error})
+                    dispatch(history.pushState(null, null, "/error"));
+                })
         },1000);
     }
 }

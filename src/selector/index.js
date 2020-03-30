@@ -3,7 +3,7 @@ import {mapToArr} from "../helpers";
 
 const filtersGetter = state => state.filters;
 const articlesGetter = state => state.articles.entities;
-const idGetter = (state,props) =>props.id;
+const idGetter = (state,props) => props.id;
 const commentsGetter = (state) =>state.comments.entities;
 
 export const filtratedArticlesSelector = createSelector(filtersGetter,articlesGetter,(filters,articles)=> {

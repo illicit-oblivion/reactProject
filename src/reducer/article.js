@@ -34,7 +34,7 @@ export default (articleState=defaultArticles, action)=>{
                 ...articleState,
                 loading:false,
                 loaded: true,
-                entities:{
+                entities: {
                     ...arrToMap(response),
                 }
             }
@@ -55,7 +55,7 @@ export default (articleState=defaultArticles, action)=>{
                 ...articleState,
                 entities:{
                     ...articleState.entities,
-                    [payload.id]:{
+                    [payload.id]: {
                         ...payload.response,
                         commentsLoading: false,
                         commentsLoaded: false,

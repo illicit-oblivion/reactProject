@@ -6,6 +6,7 @@ import {connect} from "react-redux"
 import {filtratedArticlesSelector} from "./selector"
 import {loadAllArticles} from "./AC";
 import Loader from "./Loader";
+import {NavLink} from "react-router-dom";
 
 
 class ArticleList extends Component{
@@ -13,28 +14,14 @@ class ArticleList extends Component{
         const {loaded,loading,loadAllArticles}=this.props;
         if(!loading &&!loaded) loadAllArticles();
     }
-     /*static propTypes = {
-         toggleOpenArticle: PropTypes.func.isRequired,
-         articles: PropTypes.arrayOf (PropTypes.exact({
-             id: PropTypes.string.isRequired,
-             date: PropTypes.string,
-             title: PropTypes.string,
-             text:PropTypes.string,
-             comments: PropTypes.arrayOf(PropTypes.object)
-          } )),
-         openArticleId: PropTypes.string,
-     }*/
+    b
      render() {
-        const { articles, openArticleId, toggleOpenArticle,loading } = this.props;
+        const { articles, loading } = this.props;
         if(loading) return <Loader/>
-         console.log(openArticleId);
+
         const articlesAdd = articles.map((article) => (
              <li key={article.id}>
-                 <Article
-                     article={article}
-                     isOpen={openArticleId === article.id}
-                     toggleOpen={() => toggleOpenArticle(article.id)}
-                 />
+             <NavLink to={`/articles/${article.id}`}>{article.title}</NavLink>
              </li>
         ));
 
@@ -43,29 +30,7 @@ class ArticleList extends Component{
         </ul>;
  }
 
-// filter(articles, selectedOption, dateInterval) {
-//     let resultArticles = [...articlgit add README.mdes];
-//     if (dateInterval.to) {
-    //         resultArticles = this.matchDateInterval(resultArticles, dateInterval)
-    //     }
-    //     if (selectedOption) {
-    //         resultArticles = this.matchLabel(resultArticles, selectedOption)
-    //     }
-    //     return resultArticles;
-    // }
-    //
-    //  matchDateInterval(articles, dateInterval) {
-    //      return articles.filter((article)=> {
-    //          const date = new Date(article.date);
-    //          return date >= dateInterval.from && date <= dateInterval.to
-    //      })
-    //  }
-    //
-    //  matchLabel(articles, selectedOption) {
-    //     return articles.filter((article) =>
-    //         selectedOption.find((selectedItem) => selectedItem.label === article.title)
-    //     )
-    //  }
+
 
 }
 

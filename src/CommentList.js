@@ -9,6 +9,9 @@ import withAccordion from "./withAccordion";
 import Loader from "./Loader";
 
  class CommentList extends Component {
+     static contextTypes = {
+         user:PropTypes.string,
+     }
      componentWillUpdate(nextProps, nextState) {
          const { article, loadArticleComments,articleId } = this.props;
          if(this.state.isOpen===false && nextState.isOpen === true && !article.commentsLoading && !article.commentsLoaded) {
@@ -17,14 +20,8 @@ import Loader from "./Loader";
      }
     state= {
             isOpen:false
-        }
-    static propTypes = {
-        comments: PropTypes.arrayOf (PropTypes.exact({
-            id: PropTypes.string.isRequired,
-            user: PropTypes.string,
-            text:PropTypes.string
-        } )).isRequired,
-    }
+        };
+
     render()
     {
 
@@ -32,6 +29,7 @@ import Loader from "./Loader";
 
         return (
             <ul>
+                <div>User:{this.context.user}</div>
                 <button onClick={this.toggleOpen}>{isOpen ? "close" : "open"} </button>
                 {this.getCommentList()}
             </ul>
@@ -63,4 +61,6 @@ import Loader from "./Loader";
 
 }
 
-export default connect (null,{loadArticleComments})(CommentList)
+export default connect ((state)=>({
+    comments: state.comments.entities,
+}),{loadArticleComments}, null,{pure:false})(CommentList)
