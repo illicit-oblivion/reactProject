@@ -14,13 +14,13 @@ render() {
     }
 }
 
-/*Comment.propTypes = {
+Comment.propTypes = {
     comment: PropTypes.exact({
         id: PropTypes.string.isRequired,
         user: PropTypes.string.isRequired,
         text: PropTypes.string.isRequired
     })
-}*/
+}
 
 const mapStateToProps = () => {
     const commentSelector = commentSelectorFactory();
